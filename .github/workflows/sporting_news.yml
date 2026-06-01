@@ -1,18 +1,18 @@
 # .github/workflows/sporting_news.yml
 #
 # Este ficheiro diz ao GitHub Actions para correr o nosso bot
-# automaticamente todos os dias às 8h (hora de Lisboa = UTC+1).
+# automaticamente todos os dias às 9h (hora de Lisboa = UTC+1).
 #
-# Como o GitHub Actions usa UTC, definimos as 7h UTC = 8h Lisboa.
-# No verão (WEST = UTC+1) → 7h UTC = 8h Lisboa ✅
-# No inverno (WET = UTC+0) → muda para 8h UTC se quiseres 8h Lisboa
+# Como o GitHub Actions usa UTC, definimos as 8h UTC = 9h Lisboa.
+# No verão (WEST = UTC+1) → 8h UTC = 9h Lisboa ✅
+# No inverno (WET = UTC+0) → muda para 8h UTC se quiseres 9h Lisboa
 
 name: 🦁 Sporting News Bot
 
 on:
-  # Corre automaticamente todos os dias às 7h UTC (8h Lisboa, hora de verão)
+  # Corre automaticamente todos os dias às 7h UTC (9h Lisboa, hora de verão)
   schedule:
-    - cron: "0 7 * * *"
+    - cron: "0 8 * * *"
 
   # Permite correr manualmente no separador "Actions" do GitHub
   # Útil para testar sem esperar pelo horário agendado
