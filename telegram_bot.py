@@ -79,18 +79,14 @@ def enviar_mensagem(texto: str) -> bool:
 # ---------------------------------------------------------------------------
 
 def limpar_texto(texto: str) -> str:
-    """
-    Remove tags CDATA, HTML e caracteres especiais do texto.
-    O RSS do Record e outros jornais envolve os títulos em <![CDATA[...]]>
-    que o Telegram não consegue interpretar.
-    """
-    # Remove <![CDATA[ ... ]]>
-    texto = re.sub(r"<!\[CDATA\[|\]\]>", "", texto, flags=re.IGNORECASE)
-    # Remove qualquer tag HTML restante
+    # converte para string caso não seja
+    texto = str(texto)
+    # remove <![CDATA[ ... ]]> em todas as variantes
+    texto = re.sub(r"<!\[CDATA\[", "", texto, flags=re.IGNORECASE)
+    texto = re.sub(r"\]\]>", "", texto)
+    # remove qualquer tag HTML restante
     texto = re.sub(r"<[^>]+>", "", texto)
-    # Remove caracteres de controlo
-    texto = texto.strip()
-    return texto
+    return texto.strip()
 
 
 def formatar_mensagem(noticias: list[dict]) -> str:
