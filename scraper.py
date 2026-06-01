@@ -134,6 +134,8 @@ def recolher_noticias() -> list[dict]:
 
             # feed.entries é a lista de artigos do feed
             for entry in feed.entries:
+                titulo = entry.get("title", "")
+                print(f"DEBUG: {titulo[:50]} | hoje={e_de_hoje(entry)}")
 
                 titulo = re.sub(r"<[^>]+>", "", entry.get("title", "")).strip()
                 # remove CDATA e tags HTML do link caso venha contaminado pelo RSS
