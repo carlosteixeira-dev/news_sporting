@@ -32,11 +32,6 @@ TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 # ---------------------------------------------------------------------------
 # 2. FUNÇÃO: enviar uma mensagem para o Telegram
 # ---------------------------------------------------------------------------
-def enviar_resumo_diario(noticias: list[dict]) -> None:
-    print("DEBUG — entrei no enviar_resumo_diario")  # adiciona esta linha
-    mensagem = formatar_mensagem(noticias)
-
-
 def enviar_mensagem(texto: str) -> bool:
     """
     Envia uma mensagem de texto para o Telegram via API.
@@ -162,6 +157,7 @@ def formatar_mensagem(noticias: list[dict]) -> str:
 # ---------------------------------------------------------------------------
 
 def enviar_resumo_diario(noticias: list[dict]) -> None:
+    print("DEBUG — entrei no enviar_resumo_diario")  # adiciona esta linha
     """
     Recebe a lista de notícias, formata-as e envia para o Telegram.
     Esta é a função que o main.py vai chamar.
