@@ -131,10 +131,9 @@ def recolher_noticias() -> list[dict]:
             # feed.entries é a lista de artigos do feed
             for entry in feed.entries:
                 titulo = re.sub(r"<!\[CDATA\[|\]\]>", "", entry.get("title", ""), flags=re.IGNORECASE).strip()
-                print(f"DEBUG TITULO RAW: {repr(entry.get('title', ''))}")
-                print(f"DEBUG TITULO LIMPO: {repr(titulo)}")
+                link = re.sub(r"<!\[CDATA\[|\]\]>", "", entry.get("link", ""), flags=re.IGNORECASE).strip()
+                link = re.sub(r"<[^>]+>", "", link).strip()
 
-                titulo = re.sub(r"<[^>]+>", "", entry.get("title", "")).strip()
                 # remove CDATA e tags HTML do link caso venha contaminado pelo RSS
                 link = re.sub(r"<!\[CDATA\[|\]\]>", "", entry.get("link", ""), flags=re.IGNORECASE).strip()
                 link = re.sub(r"<[^>]+>", "", link).strip()
