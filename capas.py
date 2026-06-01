@@ -81,25 +81,41 @@ def obter_url_capa(url_pagina: str) -> str | None:
 
 def enviar_foto_telegram(url_imagem: str, legenda: str) -> bool:
     """
-    Envia uma imagem para o Telegram usando o URL da imagem.
-    A legenda aparece por baixo da imagem.
+    Envia a capa como documento para o Telegram.
+    Assim a imagem não é cortada e abre em tamanho completo.
     """
     if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
         print("❌ TELEGRAM_TOKEN ou TELEGRAM_CHAT_ID não definidos!")
         return False
 
-    # endpoint da API do Telegram para enviar fotos
-    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendPhoto"
-
-    payload = {
-        "chat_id": TELEGRAM_CHAT_ID,
-        "photo": url_imagem,       # URL da imagem
-        "caption": legenda,        # texto por baixo da imagem
-        "parse_mode": "HTML"       # permite formatação HTML na legenda
+    # simula um browser para evitar bloqueios no download
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
     }
 
     try:
-        resposta = requests.post(url, data=payload, timeout=10)
+        # faz download da imagem
+        imagem = requests.get(url_imagem, headers=headers, timeout=10)
+
+        if imagem.status_code != 200:
+            print(f"❌ Erro ao descarregar imagem: {imagem.status_code}")
+            return False
+
+        # endpoint para enviar documentos no Telegram
+        url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendDocument"
+
+        payload = {
+            "chat_id": TELEGRAM_CHAT_ID,
+            "caption": legenda,
+            "parse_mode": "HTML"
+        }
+
+        # envia a imagem como ficheiro — não é cortada pelo Telegram
+        files = {
+            "document": ("capa.jpg", imagem.content, "image/jpeg")
+        }
+
+        resposta = requests.post(url, data=payload, files=files, timeout=30)
 
         if resposta.status_code == 200:
             print(f"✅ Capa enviada: {legenda}")
