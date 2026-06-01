@@ -67,8 +67,6 @@ def formatar_mensagem(noticias: list[dict]) -> str:
         for artigo in artigos:
             titulo = limpar_texto(artigo["titulo"])
             link = artigo["link"].strip()
-            print(f"DEBUG titulo: {repr(titulo)}")
-            print(f"DEBUG link: {repr(link)}")
             linhas.append(f"• <a href=\"{link}\">{titulo}</a>")
         linhas.append("")
 
@@ -84,7 +82,6 @@ def enviar_resumo_diario(noticias: list[dict]) -> None:
 
     print("\n--- MENSAGEM A ENVIAR ---")
     print(mensagem)
-    print(f"\nDEBUG REPR: {repr(mensagem)}")
     print("-------------------------\n")
 
     enviar_mensagem(mensagem)
