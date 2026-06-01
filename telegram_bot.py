@@ -66,7 +66,7 @@ def formatar_mensagem(noticias: list[dict]) -> str:
         linhas.append(f"📰 <b>{jornal}</b>")
         for artigo in artigos:
             titulo = limpar_texto(artigo["titulo"])
-            link = limpar_texto(artigo["link"])
+            link = artigo["link"].strip()
             print(f"DEBUG titulo: {repr(titulo)}")
             print(f"DEBUG link: {repr(link)}")
             linhas.append(f"• <a href=\"{link}\">{titulo}</a>")
