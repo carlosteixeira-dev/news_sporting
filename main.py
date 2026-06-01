@@ -25,8 +25,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# Só executa se corrermos este ficheiro diretamente
-if __name__ == "__main__":
-    main()
