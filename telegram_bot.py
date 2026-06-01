@@ -11,6 +11,7 @@ Bibliotecas usadas:
 
 import requests  # pip install requests
 import os
+import re
 from datetime import datetime
 
 
@@ -77,6 +78,21 @@ def enviar_mensagem(texto: str) -> bool:
 # 3. FUNÇÃO: formatar a lista de notícias numa mensagem bonita
 # ---------------------------------------------------------------------------
 
+def limpar_texto(texto: str) -> str:
+    """
+    Remove tags CDATA, HTML e caracteres especiais do texto.
+    O RSS do Record e outros jornais envolve os títulos em <![CDATA[...]]>
+    que o Telegram não consegue interpretar.
+    """
+    # Remove <![CDATA[ ... ]]>
+    texto = re.sub(r"<!\[CDATA\[|\]\]>", "", texto, flags=re.IGNORECASE)
+    # Remove qualquer tag HTML restante
+    texto = re.sub(r"<[^>]+>", "", texto)
+    # Remove caracteres de controlo
+    texto = texto.strip()
+    return texto
+
+
 def formatar_mensagem(noticias: list[dict]) -> str:
     """
     Recebe a lista de notícias (dicionários) e devolve uma string
@@ -121,7 +137,7 @@ def formatar_mensagem(noticias: list[dict]) -> str:
         linhas.append(f"📰 <b>{jornal}</b>")
 
         for artigo in artigos:
-            titulo = artigo["titulo"]
+            titulo = limpar_texto(artigo["titulo"])
             link = artigo["link"]
 
             # Cada artigo é um link clicável no Telegram
