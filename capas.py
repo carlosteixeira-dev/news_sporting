@@ -70,11 +70,6 @@ def obter_url_capa(url_pagina: str) -> str | None:
         print(f"⚠️  Erro ao obter capa: {erro}")
         return None
 
-compoe a funçao toda
-
-Mostrar mais
-20:51
-python
 def obter_url_capa(url_pagina: str) -> str | None:
     """
     Faz scraping da página do vercapas.com e extrai o URL da imagem da capa.
