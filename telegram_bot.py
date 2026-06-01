@@ -135,6 +135,8 @@ def formatar_mensagem(noticias: list[dict]) -> str:
         for artigo in artigos:
             titulo = limpar_texto(artigo["titulo"])
             link = limpar_texto(artigo["link"])
+            print(f"DEBUG titulo: {repr(titulo)}")
+            print(f"DEBUG link: {repr(link)}")
 
             # Cada artigo é um link clicável no Telegram
             # <a href="URL">Título</a> — sintaxe HTML do Telegram
