@@ -31,15 +31,15 @@ FEEDS = [
     },
     {
         "jornal": "Maisfutebol",
-        "url": "https://www.maisfutebol.iol.pt/rss"
+        "url": "https://maisfutebol.iol.pt/rss"
     },
     {
         "jornal": "O Jogo",
-        "url": "https://www.ojogo.pt/rss"
+        "url": "https://www.ojogo.pt/rss/ultimas.xml"
     },
     {
         "jornal": "Sapo Desporto",
-        "url": "https://desporto.sapo.pt/futebol/sporting/rss"
+        "url": "https://desporto.sapo.pt/rss"
     },
 ]
 
