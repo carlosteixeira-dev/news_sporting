@@ -14,18 +14,17 @@ No GitHub Actions, este ficheiro é chamado automaticamente às 8h.
 
 from scraper import recolher_noticias
 from telegram_bot import enviar_resumo_diario
-
-
-from scraper import recolher_noticias
-from telegram_bot import enviar_resumo_diario
 from capas import enviar_capas
 
 def main():
     print("🦁 Sporting News Bot — a iniciar...\n")
-    enviar_capas()          # envia as capas primeiro
+    enviar_capas()
     noticias = recolher_noticias()
     enviar_resumo_diario(noticias)
     print("\n🏁 Concluído!")
+
+if __name__ == "__main__":
+    main()
 
 
 # Só executa se corrermos este ficheiro diretamente
