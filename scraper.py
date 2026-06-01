@@ -127,13 +127,10 @@ def recolher_noticias() -> list[dict]:
         try:
             # feedparser.parse() descarrega e interpreta o RSS automaticamente
             feed = feedparser.parse(url)
-            print(f"DEBUG {jornal}: {len(feed.entries)} entradas | status={feed.get('status', 'sem status')} | bozo={feed.bozo}")
-            print(f"DEBUG {jornal}: {len(feed.entries)} entradas encontradas")
 
             # feed.entries é a lista de artigos do feed
             for entry in feed.entries:
                 titulo = re.sub(r"<!\[CDATA\[|\]\]>", "", entry.get("title", ""), flags=re.IGNORECASE).strip()
-                print(f"DEBUG: {titulo[:50]} | hoje={e_de_hoje(entry)}")
 
                 titulo = re.sub(r"<[^>]+>", "", entry.get("title", "")).strip()
                 # remove CDATA e tags HTML do link caso venha contaminado pelo RSS
