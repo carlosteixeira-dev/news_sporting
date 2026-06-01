@@ -55,8 +55,8 @@ PALAVRAS_CHAVE = [
     "sporting cp",
     "leões",
     "alvalade",
-    "ruben amorim",   # atualiza com o nome do treinador atual se necessário
-    "sporting clube",
+    "rui borges",   # atualiza com o nome do treinador atual se necessário
+    "sporting clube de portugal",
 ]
 
 
@@ -141,7 +141,7 @@ def recolher_noticias() -> list[dict]:
             # feed.entries é a lista de artigos do feed
             for entry in feed.entries:
 
-                titulo = entry.get("title", "").strip()
+                titulo = re.sub(r"<[^>]+>", "", entry.get("title", "")).strip()
                 link = entry.get("link", "").strip()
 
                 # Alguns feeds têm resumo, outros não
