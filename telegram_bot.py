@@ -156,12 +156,13 @@ def formatar_mensagem(noticias: list[dict]) -> str:
 # 4. FUNÇÃO PRINCIPAL: formatar e enviar
 # ---------------------------------------------------------------------------
 
-def enviar_resumo_diario(noticias: list[dict]) -> None:
-    print("DEBUG — entrei no enviar_resumo_diario")  # adiciona esta linha
+def enviar_resumo_diario(noticias: list[dict]) -> None: 
     """
     Recebe a lista de notícias, formata-as e envia para o Telegram.
     Esta é a função que o main.py vai chamar.
     """
+    print("DEBUG — entrei no enviar_resumo_diario")  # adiciona esta linha
+
     mensagem = formatar_mensagem(noticias)
 
     print("\n--- MENSAGEM A ENVIAR ---")
