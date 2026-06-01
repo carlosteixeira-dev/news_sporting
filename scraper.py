@@ -90,25 +90,19 @@ def e_noticia_do_sporting(titulo: str, resumo: str = "") -> bool:
 # ---------------------------------------------------------------------------
 
 def e_de_hoje(entry) -> bool:
-    """
-    Verifica se a entrada do feed é de hoje (dia atual).
-    O feedparser guarda a data em 'published_parsed' como tuplo de tempo UTC.
-
-    Se o feed não tiver data, incluímos a notícia à mesma (para não perder).
-    """
-    # Alguns feeds não têm data — incluímos por precaução
+    # se não tiver data, incluímos sempre
     if not hasattr(entry, "published_parsed") or entry.published_parsed is None:
         return True
 
-    # Convertemos o tuplo de tempo para objeto datetime (UTC)
+    # converte para datetime UTC
     data_noticia = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
 
-    # Data de hoje (UTC)
-    hoje = datetime.now(timezone.utc).date()
+    # hora atual UTC
+    agora = datetime.now(timezone.utc)
 
-    # Comparamos apenas a data (ano, mês, dia), ignorando a hora
-    return data_noticia.date() == hoje
-
+    # inclui notícias das últimas 24 horas em vez de só "hoje"
+    diferenca = agora - data_noticia
+    return diferenca.total_seconds() <= 86400  # 86400 segundos = 24 horas
 
 # ---------------------------------------------------------------------------
 # 5. FUNÇÃO PRINCIPAL: recolher todas as notícias do Sporting de hoje
