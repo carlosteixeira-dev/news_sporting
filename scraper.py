@@ -37,6 +37,10 @@ FEEDS = [
         "jornal": "Sapo Desporto",
         "url": "https://desporto.sapo.pt/futebol/sporting-cp/rss.xml"
     },
+    {
+    "jornal": "Visão de Mercado",
+    "url": "https://blogvisaodemercado.pt/feeds/posts/default?alt=rss"
+    },
 ]
 
 
