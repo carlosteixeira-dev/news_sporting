@@ -176,6 +176,7 @@ def enviar_resumo_diario(noticias: list[dict]) -> None:
 
     if len(mensagem) <= LIMITE:
         # Mensagem cabe numa só — enviamos diretamente
+        print(repr(mensagem))
         enviar_mensagem(mensagem)
     else:
         # Dividimos por parágrafos (linhas vazias)
