@@ -23,7 +23,7 @@ import re
 FEEDS = [
     {
         "jornal": "A Bola",
-        "url": "https://www.abola.pt/rss/index.aspx"
+        "url": "https://www.abola.pt/rss/nacional"
     },
     {
         "jornal": "Record",
@@ -35,11 +35,19 @@ FEEDS = [
     },
     {
         "jornal": "O Jogo",
-        "url": "https://www.ojogo.pt/rss/ultimas.xml"
+        "url": "https://www.ojogo.pt/rss"
+    },
+    {
+        "jornal": "Zerozero",
+        "url": "https://www.zerozero.pt/rss.php"
+    },
+    {
+        "jornal": "Sporting Oficial",
+        "url": "https://www.sporting.pt/pt/noticias/rss"
     },
     {
         "jornal": "Sapo Desporto",
-        "url": "https://desporto.sapo.pt/rss"
+        "url": "https://desporto.sapo.pt/futebol/sporting-cp/rss"
     },
 ]
 
