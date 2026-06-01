@@ -45,6 +45,46 @@ def obter_url_capa(url_pagina: str) -> str | None:
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
         }
+        # faz o pedido HTTP à página
+        resposta = requests.get(url_pagina, headers=headers, timeout=10)
+        # verifica se o pedido foi bem sucedido
+        if resposta.status_code != 200:
+            print(f"⚠️  Erro HTTP {resposta.status_code} ao aceder a {url_pagina}")
+            return None
+        # usa o BeautifulSoup para interpretar o HTML
+        soup = BeautifulSoup(resposta.content, "html.parser")
+        # procura a meta tag og:image que tem o URL da imagem da capa
+        meta_imagem = soup.find("meta", property="og:image")
+        if meta_imagem and meta_imagem.get("content"):
+            return meta_imagem["content"]
+        # alternativa: procura a imagem diretamente no HTML
+        imagem = soup.find("img", src=lambda s: s and "covers" in s)
+        if imagem:
+            src = imagem.get("src", "")
+            # garante que o URL é absoluto
+            if src.startswith("http"):
+                return src
+            return "https://imgs.vercapas.com" + src
+        return None
+    except Exception as erro:
+        print(f"⚠️  Erro ao obter capa: {erro}")
+        return None
+
+compoe a funçao toda
+
+Mostrar mais
+20:51
+python
+def obter_url_capa(url_pagina: str) -> str | None:
+    """
+    Faz scraping da página do vercapas.com e extrai o URL da imagem da capa.
+    Devolve o URL da imagem completa ou None se não encontrar.
+    """
+    try:
+        # simula um browser para evitar bloqueios
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        }
 
         # faz o pedido HTTP à página
         resposta = requests.get(url_pagina, headers=headers, timeout=10)
@@ -61,7 +101,10 @@ def obter_url_capa(url_pagina: str) -> str | None:
         meta_imagem = soup.find("meta", property="og:image")
 
         if meta_imagem and meta_imagem.get("content"):
-            return meta_imagem["content"]
+            url = meta_imagem["content"]
+            # substitui o URL da miniatura pelo da imagem completa
+            url = url.replace("/thumbc/26/covers/", "/covers/")
+            return url
 
         # alternativa: procura a imagem diretamente no HTML
         imagem = soup.find("img", src=lambda s: s and "covers" in s)
