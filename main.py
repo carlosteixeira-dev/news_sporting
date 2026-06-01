@@ -16,16 +16,15 @@ from scraper import recolher_noticias
 from telegram_bot import enviar_resumo_diario
 
 
+from scraper import recolher_noticias
+from telegram_bot import enviar_resumo_diario
+from capas import enviar_capas
+
 def main():
     print("🦁 Sporting News Bot — a iniciar...\n")
-
-    # Passo 1: recolher notícias dos feeds RSS
+    enviar_capas()          # envia as capas primeiro
     noticias = recolher_noticias()
-
-    # Passo 2: enviar resumo para o Telegram
-    # (mesmo que não haja notícias, enviamos mensagem a informar)
     enviar_resumo_diario(noticias)
-
     print("\n🏁 Concluído!")
 
 
