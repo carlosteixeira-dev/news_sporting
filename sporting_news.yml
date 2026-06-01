@@ -1,0 +1,47 @@
+# .github/workflows/sporting_news.yml
+#
+# Este ficheiro diz ao GitHub Actions para correr o nosso bot
+# automaticamente todos os dias às 8h (hora de Lisboa = UTC+1).
+#
+# Como o GitHub Actions usa UTC, definimos as 7h UTC = 8h Lisboa.
+# No verão (WEST = UTC+1) → 7h UTC = 8h Lisboa ✅
+# No inverno (WET = UTC+0) → muda para 8h UTC se quiseres 8h Lisboa
+
+name: 🦁 Sporting News Bot
+
+on:
+  # Corre automaticamente todos os dias às 7h UTC (8h Lisboa, hora de verão)
+  schedule:
+    - cron: "0 7 * * *"
+
+  # Permite correr manualmente no separador "Actions" do GitHub
+  # Útil para testar sem esperar pelo horário agendado
+  workflow_dispatch:
+
+jobs:
+  enviar-noticias:
+    runs-on: ubuntu-latest  # máquina virtual gratuita do GitHub
+
+    steps:
+      # Passo 1: descarregar o código do repositório
+      - name: 📥 Fazer checkout do repositório
+        uses: actions/checkout@v4
+
+      # Passo 2: instalar Python 3.11
+      - name: 🐍 Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # Passo 3: instalar as dependências do projeto
+      - name: 📦 Instalar dependências
+        run: pip install -r requirements.txt
+
+      # Passo 4: correr o bot
+      # As variáveis TELEGRAM_TOKEN e TELEGRAM_CHAT_ID vêm dos
+      # GitHub Secrets (Settings → Secrets and variables → Actions)
+      - name: 🚀 Correr o bot
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python main.py

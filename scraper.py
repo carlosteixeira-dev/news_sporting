@@ -1,0 +1,185 @@
+"""
+scraper.py
+----------
+Recolhe notícias sobre o Sporting CP a partir dos feeds RSS
+dos principais jornais desportivos portugueses.
+
+Bibliotecas usadas:
+- feedparser : lê feeds RSS de forma simples
+- datetime   : para filtrar apenas notícias de hoje
+"""
+
+import feedparser  # pip install feedparser
+from datetime import datetime, timezone
+import re
+
+
+# ---------------------------------------------------------------------------
+# 1. FEEDS RSS DOS JORNAIS
+# ---------------------------------------------------------------------------
+# Cada entrada é um dicionário com o nome do jornal e o URL do feed RSS.
+# O feedparser vai descarregar e interpretar cada feed automaticamente.
+
+FEEDS = [
+    {
+        "jornal": "A Bola",
+        "url": "https://www.abola.pt/rss/index.aspx"
+    },
+    {
+        "jornal": "Record",
+        "url": "https://www.record.pt/rss"
+    },
+    {
+        "jornal": "Maisfutebol",
+        "url": "https://www.maisfutebol.iol.pt/rss"
+    },
+    {
+        "jornal": "O Jogo",
+        "url": "https://www.ojogo.pt/rss"
+    },
+    {
+        "jornal": "Sapo Desporto",
+        "url": "https://desporto.sapo.pt/futebol/sporting/rss"
+    },
+]
+
+
+# ---------------------------------------------------------------------------
+# 2. PALAVRAS-CHAVE PARA FILTRAR NOTÍCIAS DO SPORTING
+# ---------------------------------------------------------------------------
+# Se o título ou resumo de uma notícia contiver qualquer uma destas palavras,
+# consideramos que é sobre o Sporting CP.
+
+PALAVRAS_CHAVE = [
+    "sporting",
+    "sporting cp",
+    "leões",
+    "alvalade",
+    "ruben amorim",   # atualiza com o nome do treinador atual se necessário
+    "sporting clube",
+]
+
+
+# ---------------------------------------------------------------------------
+# 3. FUNÇÃO: verificar se a notícia é sobre o Sporting
+# ---------------------------------------------------------------------------
+
+def e_noticia_do_sporting(titulo: str, resumo: str = "") -> bool:
+    """
+    Recebe o título e o resumo (opcional) de uma notícia.
+    Devolve True se contiver alguma palavra-chave do Sporting.
+
+    Exemplo:
+        e_noticia_do_sporting("Sporting vence dérbi") → True
+        e_noticia_do_sporting("Benfica contrata avançado") → False
+    """
+    # Juntamos título + resumo e convertemos para minúsculas
+    # para a comparação não ser sensível a maiúsculas/minúsculas
+    texto = (titulo + " " + resumo).lower()
+
+    # Percorremos todas as palavras-chave
+    for palavra in PALAVRAS_CHAVE:
+        if palavra.lower() in texto:
+            return True  # Basta uma palavra-chave para ser considerada
+
+    return False  # Nenhuma palavra-chave encontrada
+
+
+# ---------------------------------------------------------------------------
+# 4. FUNÇÃO: verificar se a notícia é de hoje
+# ---------------------------------------------------------------------------
+
+def e_de_hoje(entry) -> bool:
+    """
+    Verifica se a entrada do feed é de hoje (dia atual).
+    O feedparser guarda a data em 'published_parsed' como tuplo de tempo UTC.
+
+    Se o feed não tiver data, incluímos a notícia à mesma (para não perder).
+    """
+    # Alguns feeds não têm data — incluímos por precaução
+    if not hasattr(entry, "published_parsed") or entry.published_parsed is None:
+        return True
+
+    # Convertemos o tuplo de tempo para objeto datetime (UTC)
+    data_noticia = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
+
+    # Data de hoje (UTC)
+    hoje = datetime.now(timezone.utc).date()
+
+    # Comparamos apenas a data (ano, mês, dia), ignorando a hora
+    return data_noticia.date() == hoje
+
+
+# ---------------------------------------------------------------------------
+# 5. FUNÇÃO PRINCIPAL: recolher todas as notícias do Sporting de hoje
+# ---------------------------------------------------------------------------
+
+def recolher_noticias() -> list[dict]:
+    """
+    Percorre todos os feeds RSS definidos em FEEDS.
+    Para cada feed, filtra as notícias de hoje que sejam sobre o Sporting.
+    Devolve uma lista de dicionários com as notícias encontradas.
+
+    Cada notícia tem:
+        - jornal  : nome do jornal
+        - titulo  : título da notícia
+        - link    : URL para a notícia completa
+        - resumo  : primeiro parágrafo (se disponível)
+    """
+    noticias = []
+
+    for feed_info in FEEDS:
+        jornal = feed_info["jornal"]
+        url = feed_info["url"]
+
+        print(f"🔍 A recolher feed: {jornal}...")
+
+        try:
+            # feedparser.parse() descarrega e interpreta o RSS automaticamente
+            feed = feedparser.parse(url)
+
+            # feed.entries é a lista de artigos do feed
+            for entry in feed.entries:
+
+                titulo = entry.get("title", "").strip()
+                link = entry.get("link", "").strip()
+
+                # Alguns feeds têm resumo, outros não
+                resumo = entry.get("summary", "")
+
+                # Remove tags HTML do resumo (ex: <p>, <b>, etc.)
+                resumo_limpo = re.sub(r"<[^>]+>", "", resumo).strip()
+
+                # Filtramos: só notícias de hoje E sobre o Sporting
+                if e_de_hoje(entry) and e_noticia_do_sporting(titulo, resumo_limpo):
+                    noticias.append({
+                        "jornal": jornal,
+                        "titulo": titulo,
+                        "link": link,
+                        "resumo": resumo_limpo[:200],  # máximo 200 caracteres
+                    })
+
+        except Exception as erro:
+            # Se um feed falhar (ex: site em baixo), continuamos com os outros
+            print(f"⚠️  Erro ao recolher {jornal}: {erro}")
+
+    print(f"\n✅ Total de notícias do Sporting encontradas: {len(noticias)}")
+    return noticias
+
+
+# ---------------------------------------------------------------------------
+# 6. TESTE LOCAL
+# ---------------------------------------------------------------------------
+# Este bloco só corre quando executas o ficheiro diretamente:
+#   python scraper.py
+# Não corre quando o ficheiro é importado por outro módulo (ex: main.py).
+
+if __name__ == "__main__":
+    noticias = recolher_noticias()
+
+    if not noticias:
+        print("Nenhuma notícia encontrada hoje.")
+    else:
+        for n in noticias:
+            print(f"\n[{n['jornal']}] {n['titulo']}")
+            print(f"🔗 {n['link']}")
