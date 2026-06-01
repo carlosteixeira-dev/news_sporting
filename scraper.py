@@ -134,7 +134,7 @@ def recolher_noticias() -> list[dict]:
 
             # feed.entries é a lista de artigos do feed
             for entry in feed.entries:
-                titulo = entry.get("title", "")
+                titulo = re.sub(r"<!\[CDATA\[|\]\]>", "", entry.get("title", ""), flags=re.IGNORECASE).strip()
                 print(f"DEBUG: {titulo[:50]} | hoje={e_de_hoje(entry)}")
 
                 titulo = re.sub(r"<[^>]+>", "", entry.get("title", "")).strip()
