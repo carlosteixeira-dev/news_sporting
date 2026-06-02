@@ -10,7 +10,7 @@
 name: 🦁 Sporting News Bot
 
 on:
-  # Corre automaticamente todos os dias às 7h UTC (9h Lisboa, hora de verão)
+  # Corre automaticamente todos os dias às 8h UTC (9h Lisboa, hora de verão)
   schedule:
     - cron: "0 8 * * *"
 
