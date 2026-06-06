@@ -24,7 +24,7 @@ sporting_news/
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/teu-utilizador/sporting-news-bot.git
+git clone https://github.com/carlosteixeira-dev/sporting-news-bot.git
 cd sporting-news-bot
 ```
 
